@@ -4,7 +4,8 @@ use gpui_component::{
     checkbox::Checkbox,
     h_flex,
     scroll::ScrollableElement as _,
-    v_flex, ActiveTheme as _, Disableable as _, IconName, Selectable as _, Sizable as _,
+    v_flex, ActiveTheme as _, Colorize as _, Disableable as _, IconName, Selectable as _,
+    Sizable as _,
 };
 
 pub struct ButtonStory {
@@ -257,11 +258,13 @@ impl ButtonStory {
     }
 
     fn custom_variant(&self, cx: &mut Context<Self>) -> impl IntoElement {
+        let magenta = cx.theme().magenta;
+        let background = magenta.mix_oklab(cx.theme().transparent, 0.2);
         let custom = ButtonCustomVariant::new(cx)
-            .color(cx.theme().magenta)
-            .foreground(cx.theme().magenta)
-            .hover(cx.theme().magenta.opacity(0.1))
-            .active(cx.theme().magenta)
+            .color(magenta)
+            .foreground(magenta)
+            .hover(magenta.opacity(0.4))
+            .active(background)
             .shadow(true);
 
         section(
@@ -270,6 +273,7 @@ impl ButtonStory {
                 self.apply_state(
                     ComponentButton::new("button-custom")
                         .custom(custom)
+                        .when(self.selected, |this| this.border_1().border_color(magenta))
                         .label("Custom Magenta"),
                 ),
             ),

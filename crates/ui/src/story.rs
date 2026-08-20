@@ -411,8 +411,8 @@ impl StoryId {
 
     pub const fn description(self) -> Option<&'static str> {
         match self {
+            Self::Accordion => Some("Expandable sections with controlled open state."),
             Self::Button => Some("Displays buttons, button variants, and button groups."),
-            Self::Accordion => Some(""),
             _ => None,
         }
     }

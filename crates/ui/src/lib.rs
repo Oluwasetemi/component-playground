@@ -1,9 +1,11 @@
+mod accordion_story;
 mod button;
 mod button_story;
 mod hello_world;
 mod story;
 mod theme;
 
+use accordion_story::AccordionStory;
 use button_story::ButtonStory;
 pub use story::{StoryGroup, StoryId};
 
@@ -25,6 +27,7 @@ pub struct RootView {
     theme: Theme,
     selected: StoryId,
     sidebar_collapsed: bool,
+    accordion_story: gpui::Entity<AccordionStory>,
     button_story: gpui::Entity<ButtonStory>,
 }
 
@@ -34,6 +37,7 @@ impl RootView {
             theme: Theme::groknight(),
             selected: StoryId::Button,
             sidebar_collapsed: false,
+            accordion_story: cx.new(|cx| AccordionStory::new(window, cx)),
             button_story: cx.new(|cx| ButtonStory::new(window, cx)),
         }
     }
@@ -88,21 +92,22 @@ impl RootView {
     }
 
     fn render_content(&self, _cx: &mut Context<Self>) -> impl IntoElement {
-        if self.selected == StoryId::Button {
-            self.button_story.clone().into_any_element()
-        } else {
-            let description = self
-                .selected
-                .description()
-                .unwrap_or("This playground section is ready for its story.");
-            v_flex()
-                .size_full()
-                .items_center()
-                .justify_center()
-                .gap_2()
-                .child(self.selected.label())
-                .child(description)
-                .into_any_element()
+        match self.selected {
+            StoryId::Accordion => self.accordion_story.clone().into_any_element(),
+            StoryId::Button => self.button_story.clone().into_any_element(),
+            story => {
+                let description = story
+                    .description()
+                    .unwrap_or("This playground section is ready for its story.");
+                v_flex()
+                    .size_full()
+                    .items_center()
+                    .justify_center()
+                    .gap_2()
+                    .child(story.label())
+                    .child(description)
+                    .into_any_element()
+            }
         }
     }
 }

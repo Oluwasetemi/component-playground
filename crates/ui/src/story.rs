@@ -411,6 +411,9 @@ impl StoryId {
 
     pub const fn description(self) -> Option<&'static str> {
         match self {
+            Self::Alert => Some("Callouts for important status and attention messages."),
+            Self::AvatarAndAvatarGroup => Some("User and organization identity representations."),
+            Self::Badge => Some("Counts, dots, and status icons attached to content."),
             Self::Button => Some("Displays buttons, button variants, and button groups."),
             Self::Accordion => Some(""),
             _ => None,

@@ -1,9 +1,15 @@
+mod alert_story;
+mod avatar_story;
+mod badge_story;
 mod button;
 mod button_story;
 mod hello_world;
 mod story;
 mod theme;
 
+use alert_story::AlertStory;
+use avatar_story::AvatarStory;
+use badge_story::BadgeStory;
 use button_story::ButtonStory;
 pub use story::{StoryGroup, StoryId};
 
@@ -25,6 +31,9 @@ pub struct RootView {
     theme: Theme,
     selected: StoryId,
     sidebar_collapsed: bool,
+    alert_story: gpui::Entity<AlertStory>,
+    avatar_story: gpui::Entity<AvatarStory>,
+    badge_story: gpui::Entity<BadgeStory>,
     button_story: gpui::Entity<ButtonStory>,
 }
 
@@ -34,6 +43,9 @@ impl RootView {
             theme: Theme::groknight(),
             selected: StoryId::Button,
             sidebar_collapsed: false,
+            alert_story: cx.new(|cx| AlertStory::new(window, cx)),
+            avatar_story: cx.new(|cx| AvatarStory::new(window, cx)),
+            badge_story: cx.new(|cx| BadgeStory::new(window, cx)),
             button_story: cx.new(|cx| ButtonStory::new(window, cx)),
         }
     }
@@ -88,21 +100,24 @@ impl RootView {
     }
 
     fn render_content(&self, _cx: &mut Context<Self>) -> impl IntoElement {
-        if self.selected == StoryId::Button {
-            self.button_story.clone().into_any_element()
-        } else {
-            let description = self
-                .selected
-                .description()
-                .unwrap_or("This playground section is ready for its story.");
-            v_flex()
-                .size_full()
-                .items_center()
-                .justify_center()
-                .gap_2()
-                .child(self.selected.label())
-                .child(description)
-                .into_any_element()
+        match self.selected {
+            StoryId::Alert => self.alert_story.clone().into_any_element(),
+            StoryId::AvatarAndAvatarGroup => self.avatar_story.clone().into_any_element(),
+            StoryId::Badge => self.badge_story.clone().into_any_element(),
+            StoryId::Button => self.button_story.clone().into_any_element(),
+            story => {
+                let description = story
+                    .description()
+                    .unwrap_or("This playground section is ready for its story.");
+                v_flex()
+                    .size_full()
+                    .items_center()
+                    .justify_center()
+                    .gap_2()
+                    .child(story.label())
+                    .child(description)
+                    .into_any_element()
+            }
         }
     }
 }

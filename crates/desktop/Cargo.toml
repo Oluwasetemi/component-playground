@@ -1,13 +1,15 @@
 [package]
-name = "gpui-starter-desktop"
+name = "component-playground-desktop"
 version.workspace = true
 edition.workspace = true
 
 [[bin]]
-name = "gpui-starter"
+name = "component-playground-desktop"
 path = "src/main.rs"
 
 [dependencies]
 gpui.workspace = true
 gpui_platform.workspace = true
-gpui-starter-ui.workspace = true
+component-playground-ui.workspace = true
+gpui-component.workspace = true
+gpui-component-assets.workspace = true

@@ -11,7 +11,10 @@ edition = "2021"
 gpui = { git = "https://github.com/zed-industries/zed" }
 gpui_platform = { git = "https://github.com/zed-industries/zed", features = [
     "font-kit",
-    "wayland",
-    "x11",
+    "runtime_shaders"
 ] }
-gpui-starter-ui = { path = "crates/ui" }
+gpui-component = { git = "https://github.com/longbridge/gpui-component", rev = "04cc6eb25aa66bafa718bebea71dc5a933d26288" }
+# Optional, for default bundled assets
+gpui-component-assets = { git = "https://github.com/longbridge/gpui-component", rev = "04cc6eb25aa66bafa718bebea71dc5a933d26288" }
+anyhow = "1.0"
+component-playground-ui = { path = "crates/ui" }

@@ -1,6 +1,6 @@
 use gpui::{
-    App, ClickEvent, FontWeight, IntoElement, RenderOnce, SharedString, Window, div, prelude::*,
-    px, rgba,
+    div, prelude::*, px, rgba, App, ClickEvent, FontWeight, IntoElement, RenderOnce, SharedString,
+    Window,
 };
 
 use crate::theme::Theme;

@@ -197,6 +197,13 @@ impl ButtonStory {
                 )
                 .child(
                     self.apply_state(
+                        ComponentButton::new("button-medium")
+                            .primary()
+                            .label("Medium (Default)"),
+                    ),
+                )
+                .child(
+                    self.apply_state(
                         ComponentButton::new("button-small")
                             .secondary()
                             .small()
@@ -410,7 +417,7 @@ impl Render for ButtonStory {
     }
 }
 
-fn section(title: &'static str, content: impl IntoElement) -> impl IntoElement {
+pub fn section(title: &'static str, content: impl IntoElement) -> impl IntoElement {
     v_flex()
         .gap_3()
         .child(div().text_size(px(16.)).child(title))

@@ -1,4 +1,4 @@
-use gpui::{Hsla, Rgba, rgb, rgba, transparent_black};
+use gpui::{rgb, rgba, transparent_black, Hsla, Rgba};
 
 /// Groknight palette + UI chrome tokens.
 #[derive(Clone, Copy, Debug)]

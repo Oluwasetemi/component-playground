@@ -1,3 +1,4 @@
+use crate::StorySection;
 use gpui::{div, prelude::*, px, Context, IntoElement, Render, Window};
 use gpui_component::{
     alert::Alert,
@@ -58,7 +59,7 @@ impl AlertStory {
     }
 
     fn variants(&self, cx: &mut Context<Self>) -> impl IntoElement {
-        section(
+        StorySection::new(
             "Variants",
             v_flex()
                 .gap_2()
@@ -89,7 +90,7 @@ impl AlertStory {
     }
 
     fn banners(&self, cx: &mut Context<Self>) -> impl IntoElement {
-        section(
+        StorySection::new(
             "Banners",
             v_flex()
                 .gap_2()
@@ -134,7 +135,7 @@ impl Render for AlertStory {
             .child(self.controls(cx))
             .child(self.variants(cx))
             .child(self.banners(cx))
-            .child(section(
+            .child(StorySection::new(
                 "Custom Icon",
                 Alert::new("alert-custom-icon", "This alert uses a calendar icon.")
                     .title("Custom alert")
@@ -142,11 +143,4 @@ impl Render for AlertStory {
                     .icon(gpui_component::IconName::Calendar),
             ))
     }
-}
-
-fn section(title: &'static str, content: impl IntoElement) -> impl IntoElement {
-    v_flex()
-        .gap_3()
-        .child(div().text_size(px(16.)).child(title))
-        .child(content)
 }

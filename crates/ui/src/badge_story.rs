@@ -1,3 +1,4 @@
+use crate::StorySection;
 use gpui::{div, prelude::*, px, Context, IntoElement, Render, Window};
 use gpui_component::{
     avatar::Avatar, badge::Badge, h_flex, scroll::ScrollableElement as _, v_flex, ActiveTheme as _,
@@ -25,7 +26,7 @@ impl Render for BadgeStory {
                     .child(div().text_size(px(24.)).child("Badge"))
                     .child("Counts, dots, and status icons attached to content."),
             )
-            .child(section(
+            .child(StorySection::new(
                 "Badge on Icon",
                 h_flex()
                     .items_center()
@@ -42,7 +43,7 @@ impl Render for BadgeStory {
                             .child(Icon::new(IconName::Inbox).large()),
                     ),
             ))
-            .child(section(
+            .child(StorySection::new(
                 "Badge with Count",
                 h_flex()
                     .items_center()
@@ -58,7 +59,7 @@ impl Render for BadgeStory {
                             .child(Avatar::new().name("Bob").large()),
                     ),
             ))
-            .child(section(
+            .child(StorySection::new(
                 "Badge with Icon",
                 h_flex()
                     .items_center()
@@ -76,7 +77,7 @@ impl Render for BadgeStory {
                             .child(Avatar::new().name("Starred").large()),
                     ),
             ))
-            .child(section(
+            .child(StorySection::new(
                 "Badge with Dot",
                 h_flex()
                     .items_center()
@@ -94,7 +95,7 @@ impl Render for BadgeStory {
                             .child(Avatar::new().name("Active").large()),
                     ),
             ))
-            .child(section(
+            .child(StorySection::new(
                 "Nested Badges",
                 h_flex()
                     .items_center()
@@ -119,11 +120,4 @@ impl Render for BadgeStory {
                     ),
             ))
     }
-}
-
-fn section(title: &'static str, content: impl IntoElement) -> impl IntoElement {
-    v_flex()
-        .gap_3()
-        .child(div().text_size(px(16.)).child(title))
-        .child(content)
 }

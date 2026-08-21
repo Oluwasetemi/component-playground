@@ -6,6 +6,7 @@ mod button;
 mod button_story;
 mod hello_world;
 mod story;
+mod story_section;
 mod theme;
 
 use accordion_story::AccordionStory;
@@ -14,6 +15,7 @@ use avatar_story::AvatarStory;
 use badge_story::BadgeStory;
 use button_story::ButtonStory;
 pub use story::{StoryGroup, StoryId};
+pub use story_section::StorySection;
 
 pub use button::{Button, ButtonVariant, BUTTON_VARIANTS};
 pub use hello_world::HelloWorld;

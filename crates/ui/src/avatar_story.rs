@@ -1,3 +1,4 @@
+use crate::StorySection;
 use gpui::{div, prelude::*, px, Context, IntoElement, Render, Window};
 use gpui_component::{
     avatar::{Avatar, AvatarGroup},
@@ -27,7 +28,7 @@ impl Render for AvatarStory {
                     .child(div().text_size(px(24.)).child("Avatar and Avatar Group"))
                     .child("User and organization identity representations."),
             )
-            .child(section(
+            .child(StorySection::new(
                 "Avatar with text",
                 h_flex()
                     .flex_wrap()
@@ -38,7 +39,7 @@ impl Render for AvatarStory {
                     .child(Avatar::new().name("xda").small())
                     .child(Avatar::new().name("ihavecoke").xsmall()),
             ))
-            .child(section(
+            .child(StorySection::new(
                 "Placeholder",
                 h_flex()
                     .flex_wrap()
@@ -50,7 +51,7 @@ impl Render for AvatarStory {
                     .child(Avatar::new().xsmall())
                     .child(Avatar::new().placeholder(IconName::Building2)),
             ))
-            .child(section(
+            .child(StorySection::new(
                 "Avatar Group",
                 v_flex()
                     .gap_4()
@@ -83,7 +84,7 @@ impl Render for AvatarStory {
                             .child(Avatar::new().name("Eve")),
                     ),
             ))
-            .child(section(
+            .child(StorySection::new(
                 "Custom Styling",
                 h_flex()
                     .items_center()
@@ -103,11 +104,4 @@ impl Render for AvatarStory {
                     ),
             ))
     }
-}
-
-fn section(title: &'static str, content: impl IntoElement) -> impl IntoElement {
-    v_flex()
-        .gap_3()
-        .child(div().text_size(px(16.)).child(title))
-        .child(content)
 }

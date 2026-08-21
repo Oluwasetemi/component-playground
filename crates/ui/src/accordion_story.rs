@@ -1,3 +1,4 @@
+use crate::StorySection;
 use gpui::{div, prelude::*, px, Context, IntoElement, Render, Window};
 use gpui_component::{
     accordion::Accordion,
@@ -175,13 +176,9 @@ impl Render for AccordionStory {
                     .child("Expandable sections with controlled open state."),
             )
             .child(self.controls(cx))
-            .child(section("Interactive Accordion", self.accordion(cx)))
+            .child(StorySection::new(
+                "Interactive Accordion",
+                self.accordion(cx),
+            ))
     }
-}
-
-fn section(title: &'static str, content: impl IntoElement) -> impl IntoElement {
-    v_flex()
-        .gap_3()
-        .child(div().text_size(px(16.)).child(title))
-        .child(content)
 }

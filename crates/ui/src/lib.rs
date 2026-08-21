@@ -1,13 +1,21 @@
 mod accordion_story;
+mod alert_story;
+mod avatar_story;
+mod badge_story;
 mod button;
 mod button_story;
 mod hello_world;
 mod story;
+mod story_section;
 mod theme;
 
 use accordion_story::AccordionStory;
+use alert_story::AlertStory;
+use avatar_story::AvatarStory;
+use badge_story::BadgeStory;
 use button_story::ButtonStory;
 pub use story::{StoryGroup, StoryId};
+pub use story_section::StorySection;
 
 pub use button::{Button, ButtonVariant, BUTTON_VARIANTS};
 pub use hello_world::HelloWorld;
@@ -28,6 +36,9 @@ pub struct RootView {
     selected: StoryId,
     sidebar_collapsed: bool,
     accordion_story: gpui::Entity<AccordionStory>,
+    alert_story: gpui::Entity<AlertStory>,
+    avatar_story: gpui::Entity<AvatarStory>,
+    badge_story: gpui::Entity<BadgeStory>,
     button_story: gpui::Entity<ButtonStory>,
 }
 
@@ -38,6 +49,9 @@ impl RootView {
             selected: StoryId::Button,
             sidebar_collapsed: false,
             accordion_story: cx.new(|cx| AccordionStory::new(window, cx)),
+            alert_story: cx.new(|cx| AlertStory::new(window, cx)),
+            avatar_story: cx.new(|cx| AvatarStory::new(window, cx)),
+            badge_story: cx.new(|cx| BadgeStory::new(window, cx)),
             button_story: cx.new(|cx| ButtonStory::new(window, cx)),
         }
     }
@@ -94,6 +108,9 @@ impl RootView {
     fn render_content(&self, _cx: &mut Context<Self>) -> impl IntoElement {
         match self.selected {
             StoryId::Accordion => self.accordion_story.clone().into_any_element(),
+            StoryId::Alert => self.alert_story.clone().into_any_element(),
+            StoryId::AvatarAndAvatarGroup => self.avatar_story.clone().into_any_element(),
+            StoryId::Badge => self.badge_story.clone().into_any_element(),
             StoryId::Button => self.button_story.clone().into_any_element(),
             story => {
                 let description = story

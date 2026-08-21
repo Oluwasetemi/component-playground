@@ -1,3 +1,4 @@
+use crate::StorySection;
 use gpui::{div, prelude::*, px, App, Axis, ClickEvent, Context, IntoElement, Render, Window};
 use gpui_component::{
     button::{Button as ComponentButton, ButtonCustomVariant, ButtonGroup, ButtonVariants as _},
@@ -89,7 +90,7 @@ impl ButtonStory {
     }
 
     fn standard_variants(&self) -> impl IntoElement {
-        section(
+        StorySection::new(
             "Standard Variants",
             h_flex()
                 .flex_wrap()
@@ -140,7 +141,7 @@ impl ButtonStory {
     }
 
     fn outline_variants(&self) -> impl IntoElement {
-        section(
+        StorySection::new(
             "Outline Variants",
             h_flex()
                 .flex_wrap()
@@ -181,7 +182,7 @@ impl ButtonStory {
     }
 
     fn sizes(&self) -> impl IntoElement {
-        section(
+        StorySection::new(
             "Sizes",
             h_flex()
                 .items_center()
@@ -222,7 +223,7 @@ impl ButtonStory {
     }
 
     fn content_examples(&self) -> impl IntoElement {
-        section(
+        StorySection::new(
             "Icons and Content",
             h_flex()
                 .flex_wrap()
@@ -274,7 +275,7 @@ impl ButtonStory {
             .active(background)
             .shadow(true);
 
-        section(
+        StorySection::new(
             "Custom Variant",
             h_flex().child(
                 self.apply_state(
@@ -288,7 +289,7 @@ impl ButtonStory {
     }
 
     fn horizontal_group(&self, cx: &mut Context<Self>) -> impl IntoElement {
-        section(
+        StorySection::new(
             "Horizontal Button Group",
             h_flex().child(
                 ButtonGroup::new("button-group-horizontal")
@@ -318,7 +319,7 @@ impl ButtonStory {
     }
 
     fn vertical_group(&self, cx: &mut Context<Self>) -> impl IntoElement {
-        section(
+        StorySection::new(
             "Vertical Button Group",
             h_flex().child(
                 ButtonGroup::new("button-group-vertical")
@@ -349,7 +350,7 @@ impl ButtonStory {
     }
 
     fn toggle_group(&self, cx: &mut Context<Self>) -> impl IntoElement {
-        section(
+        StorySection::new(
             "Toggle Button Group",
             v_flex()
                 .gap_2()
@@ -415,11 +416,4 @@ impl Render for ButtonStory {
             .child(self.vertical_group(cx))
             .child(self.toggle_group(cx))
     }
-}
-
-pub fn section(title: &'static str, content: impl IntoElement) -> impl IntoElement {
-    v_flex()
-        .gap_3()
-        .child(div().text_size(px(16.)).child(title))
-        .child(content)
 }

@@ -5,18 +5,30 @@ mod badge_story;
 mod breadcrumb_story;
 mod button;
 mod button_story;
+mod calendar_story;
 mod checkbox_story;
 mod collapsible_story;
+mod color_picker_story;
+mod combobox_story;
+mod date_picker_story;
+mod form_story;
 mod group_box_story;
 mod hello_world;
+mod input_story;
 mod kbd_story;
 mod label_story;
 mod link_story;
+mod number_input_story;
+mod otp_input_story;
+mod pagination_story;
 mod progress_story;
 mod radio_story;
 mod rating_story;
+mod select_story;
 mod separator_story;
+mod settings_story;
 mod skeleton_story;
+mod slider_story;
 mod spinner_story;
 mod status_bar_story;
 mod stepper_story;
@@ -25,6 +37,7 @@ mod story_section;
 mod switch_story;
 mod tabs_story;
 mod tag_story;
+mod textarea_story;
 mod theme;
 
 use accordion_story::AccordionStory;
@@ -33,17 +46,29 @@ use avatar_story::AvatarStory;
 use badge_story::BadgeStory;
 use breadcrumb_story::BreadcrumbStory;
 use button_story::ButtonStory;
+use calendar_story::CalendarStory;
 use checkbox_story::CheckboxStory;
 use collapsible_story::CollapsibleStory;
+use color_picker_story::ColorPickerStory;
+use combobox_story::ComboboxStory;
+use date_picker_story::DatePickerStory;
+use form_story::FormStory;
 use group_box_story::GroupBoxStory;
+use input_story::InputStory;
 use kbd_story::KbdStory;
 use label_story::LabelStory;
 use link_story::LinkStory;
+use number_input_story::NumberInputStory;
+use otp_input_story::OtpInputStory;
+use pagination_story::PaginationStory;
 use progress_story::ProgressStory;
 use radio_story::RadioStory;
 use rating_story::RatingStory;
+use select_story::SelectStory;
 use separator_story::SeparatorStory;
+use settings_story::SettingsStory;
 use skeleton_story::SkeletonStory;
+use slider_story::SliderStory;
 use spinner_story::SpinnerStory;
 use status_bar_story::StatusBarStory;
 use stepper_story::StepperStory;
@@ -52,6 +77,7 @@ pub use story_section::StorySection;
 use switch_story::SwitchStory;
 use tabs_story::TabsStory;
 use tag_story::TagStory;
+use textarea_story::TextareaStory;
 
 pub use button::{Button, ButtonVariant, BUTTON_VARIANTS};
 pub use hello_world::HelloWorld;
@@ -94,6 +120,19 @@ pub struct RootView {
     switch_story: gpui::Entity<SwitchStory>,
     tag_story: gpui::Entity<TagStory>,
     tabs_story: gpui::Entity<TabsStory>,
+    input_story: gpui::Entity<InputStory>,
+    textarea_story: gpui::Entity<TextareaStory>,
+    otp_input_story: gpui::Entity<OtpInputStory>,
+    number_input_story: gpui::Entity<NumberInputStory>,
+    select_story: gpui::Entity<SelectStory>,
+    combobox_story: gpui::Entity<ComboboxStory>,
+    color_picker_story: gpui::Entity<ColorPickerStory>,
+    slider_story: gpui::Entity<SliderStory>,
+    form_story: gpui::Entity<FormStory>,
+    settings_story: gpui::Entity<SettingsStory>,
+    pagination_story: gpui::Entity<PaginationStory>,
+    date_picker_story: gpui::Entity<DatePickerStory>,
+    calendar_story: gpui::Entity<CalendarStory>,
 }
 
 impl RootView {
@@ -125,6 +164,19 @@ impl RootView {
             switch_story: cx.new(|cx| SwitchStory::new(window, cx)),
             tag_story: cx.new(|cx| TagStory::new(window, cx)),
             tabs_story: cx.new(|cx| TabsStory::new(window, cx)),
+            input_story: cx.new(|cx| InputStory::new(window, cx)),
+            textarea_story: cx.new(|cx| TextareaStory::new(window, cx)),
+            otp_input_story: cx.new(|cx| OtpInputStory::new(window, cx)),
+            number_input_story: cx.new(|cx| NumberInputStory::new(window, cx)),
+            select_story: cx.new(|cx| SelectStory::new(window, cx)),
+            combobox_story: cx.new(|cx| ComboboxStory::new(window, cx)),
+            color_picker_story: cx.new(|cx| ColorPickerStory::new(window, cx)),
+            slider_story: cx.new(|cx| SliderStory::new(window, cx)),
+            form_story: cx.new(|cx| FormStory::new(window, cx)),
+            settings_story: cx.new(|cx| SettingsStory::new(window, cx)),
+            pagination_story: cx.new(|cx| PaginationStory::new(window, cx)),
+            date_picker_story: cx.new(|cx| DatePickerStory::new(window, cx)),
+            calendar_story: cx.new(|cx| CalendarStory::new(window, cx)),
         }
     }
 
@@ -202,6 +254,19 @@ impl RootView {
             StoryId::Switch => self.switch_story.clone().into_any_element(),
             StoryId::Tag => self.tag_story.clone().into_any_element(),
             StoryId::TabsAndTabBar => self.tabs_story.clone().into_any_element(),
+            StoryId::Input => self.input_story.clone().into_any_element(),
+            StoryId::Textarea => self.textarea_story.clone().into_any_element(),
+            StoryId::OtpInput => self.otp_input_story.clone().into_any_element(),
+            StoryId::NumberInput => self.number_input_story.clone().into_any_element(),
+            StoryId::Select => self.select_story.clone().into_any_element(),
+            StoryId::Combobox => self.combobox_story.clone().into_any_element(),
+            StoryId::ColorPicker => self.color_picker_story.clone().into_any_element(),
+            StoryId::Slider => self.slider_story.clone().into_any_element(),
+            StoryId::Form => self.form_story.clone().into_any_element(),
+            StoryId::Settings => self.settings_story.clone().into_any_element(),
+            StoryId::Pagination => self.pagination_story.clone().into_any_element(),
+            StoryId::DatePicker => self.date_picker_story.clone().into_any_element(),
+            StoryId::Calendar => self.calendar_story.clone().into_any_element(),
             story => {
                 let description = story
                     .description()

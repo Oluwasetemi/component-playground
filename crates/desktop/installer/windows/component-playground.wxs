@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product
+    Id="*"
+    Name="Component Playground"
+    Language="1033"
+    Version="$(var.ProductVersion)"
+    Manufacturer="Component Playground"
+    UpgradeCode="8E7AA5C5-C328-4A04-B39C-FA67642C1A14">
+    <Package InstallerVersion="500" Compressed="yes" InstallScope="perMachine" />
+    <MajorUpgrade DowngradeErrorMessage="A newer version of Component Playground is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="INSTALLFOLDER" Name="Component Playground">
+          <Component Id="MainExecutable" Guid="18C4AC21-D1E7-4E24-8219-F1439338142E">
+            <File Id="MainExe" Source="$(var.SourceDir)\component-playground-desktop.exe" KeyPath="yes" />
+          </Component>
+          <Component Id="ReadmeFile" Guid="F8522800-29E9-4CD6-8461-FF2077B31A8F">
+            <File Id="Readme" Source="$(var.SourceDir)\README.md" KeyPath="yes" />
+          </Component>
+          <Component Id="ChangelogFile" Guid="47B06E13-97AE-4870-BE35-98A33E6825A9">
+            <File Id="Changelog" Source="$(var.SourceDir)\CHANGELOG.md" KeyPath="yes" />
+          </Component>
+        </Directory>
+      </Directory>
+
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="ApplicationProgramsFolder" Name="Component Playground">
+          <Component Id="StartMenuShortcut" Guid="A483A3EF-0348-42B0-8FC8-6D91571B98FE">
+            <Shortcut
+              Id="ApplicationStartMenuShortcut"
+              Name="Component Playground"
+              Description="Launch Component Playground"
+              Target="[INSTALLFOLDER]component-playground-desktop.exe"
+              WorkingDirectory="INSTALLFOLDER" />
+            <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall" />
+            <RegistryValue Root="HKCU" Key="Software\Component Playground" Name="installed" Type="integer" Value="1" KeyPath="yes" />
+          </Component>
+        </Directory>
+      </Directory>
+    </Directory>
+
+    <Feature Id="ProductFeature" Title="Component Playground" Level="1">
+      <ComponentRef Id="MainExecutable" />
+      <ComponentRef Id="ReadmeFile" />
+      <ComponentRef Id="ChangelogFile" />
+      <ComponentRef Id="StartMenuShortcut" />
+    </Feature>
+  </Product>
+</Wix>

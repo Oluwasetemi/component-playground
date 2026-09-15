@@ -13,6 +13,7 @@ All notable changes to Component Playground are documented here.
 - Bundled app icon usage inside the app, local macOS `.app` generation, and macOS-style padded rounded app icons.
 - Release downloads for macOS Apple Silicon, macOS Intel, Linux x86_64, and Windows x86_64.
 - macOS DMG release artifacts for Apple Silicon and Intel.
+- Windows standalone `.exe`, `.msi` installer, and `.zip` release artifacts.
 
 ### Changed
 

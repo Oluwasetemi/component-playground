@@ -104,6 +104,11 @@ jobs:
             libxkbcommon-x11-dev \
             pkg-config
 
+      - name: Install Windows packaging tools
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: choco install wixtoolset --no-progress -y
+
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
         with:
@@ -220,11 +225,29 @@ jobs:
           hash="$(shasum -a 256 "dist/$dmg" | awk '{print $1}')"
           echo "$hash  $dmg" > "dist/$dmg.sha256"
 
-      - name: Package Windows release archive
+      - name: Package Windows release artifacts
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          Compress-Archive -Path "dist/package/component-playground-${env:GITHUB_REF_NAME}" -DestinationPath "dist/${{ matrix.archive }}"
+          $ErrorActionPreference = "Stop"
+          $packageDir = "dist/package/component-playground-${env:GITHUB_REF_NAME}"
+          $exe = "component-playground-${env:GITHUB_REF_NAME}-windows-x86_64.exe"
+          $msi = "component-playground-${env:GITHUB_REF_NAME}-windows-x86_64.msi"
+
+          Copy-Item "$packageDir/component-playground-desktop.exe" "dist/$exe"
+          $hash = Get-FileHash "dist/$exe" -Algorithm SHA256
+          "$($hash.Hash.ToLower())  $exe" | Out-File -Encoding ascii "dist/$exe.sha256"
+
+          $version = $env:GITHUB_REF_NAME.TrimStart("v")
+          $wixRoot = Get-ChildItem "${env:ProgramFiles(x86)}" -Directory -Filter "WiX Toolset*" | Sort-Object Name -Descending | Select-Object -First 1
+          $candle = Join-Path $wixRoot.FullName "bin/candle.exe"
+          $light = Join-Path $wixRoot.FullName "bin/light.exe"
+          & $candle "-dSourceDir=$packageDir" "-dProductVersion=$version" "crates/desktop/installer/windows/component-playground.wxs" "-out" "dist/component-playground.wixobj"
+          & $light "-out" "dist/$msi" "dist/component-playground.wixobj"
+          $hash = Get-FileHash "dist/$msi" -Algorithm SHA256
+          "$($hash.Hash.ToLower())  $msi" | Out-File -Encoding ascii "dist/$msi.sha256"
+
+          Compress-Archive -Path $packageDir -DestinationPath "dist/${{ matrix.archive }}"
           $hash = Get-FileHash "dist/${{ matrix.archive }}" -Algorithm SHA256
           "$($hash.Hash.ToLower())  ${{ matrix.archive }}" | Out-File -Encoding ascii "dist/${{ matrix.archive }}.sha256"
 
@@ -235,6 +258,8 @@ jobs:
           path: |
             dist/*.tar.gz
             dist/*.dmg
+            dist/*.exe
+            dist/*.msi
             dist/*.zip
             dist/*.sha256
           if-no-files-found: error
@@ -256,7 +281,7 @@ jobs:
 
       - name: Create combined checksums
         working-directory: dist
-        run: sha256sum *.tar.gz *.dmg *.zip > SHA256SUMS
+        run: sha256sum *.tar.gz *.dmg *.exe *.msi *.zip > SHA256SUMS
 
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2

@@ -1,14 +1,35 @@
 run:
-    cargo run --locked --release -p component-playground-desktop
+    #!/usr/bin/env bash
+    set -euo pipefail
+    if [[ "$(uname -s)" == "Darwin" ]]; then
+      cargo build --locked --release -p component-playground-desktop
+      app_path="$(scripts/create-macos-app.sh release)"
+      "$app_path/Contents/MacOS/Component Playground"
+    else
+      cargo run --locked --release -p component-playground-desktop
+    fi
 
 build:
+    #!/usr/bin/env bash
+    set -euo pipefail
     cargo build --locked --release -p component-playground-desktop
+    if [[ "$(uname -s)" == "Darwin" ]]; then
+      scripts/create-macos-app.sh release >/dev/null
+    fi
 
 check:
     cargo check --locked -p component-playground-ui -p component-playground-desktop
 
 dev:
-    cargo run --locked -p component-playground-desktop
+    #!/usr/bin/env bash
+    set -euo pipefail
+    if [[ "$(uname -s)" == "Darwin" ]]; then
+      cargo build --locked -p component-playground-desktop
+      app_path="$(scripts/create-macos-app.sh debug)"
+      "$app_path/Contents/MacOS/Component Playground"
+    else
+      cargo run --locked -p component-playground-desktop
+    fi
 
 test:
     cargo test --locked --workspace

@@ -118,7 +118,10 @@ pub use button::{Button, ButtonVariant, BUTTON_VARIANTS};
 pub use hello_world::HelloWorld;
 pub use theme::Theme;
 
-use gpui::{div, img, prelude::*, px, Context, IntoElement, MouseButton, MouseDownEvent, Window};
+use gpui::{
+    div, img, prelude::*, px, Context, Focusable as _, IntoElement, MouseButton, MouseDownEvent,
+    Window,
+};
 use gpui_component::{
     h_flex,
     sidebar::{
@@ -349,7 +352,12 @@ impl RootView {
         }
     }
 
-    fn render_sidebar(&self, cx: &mut Context<Self>) -> impl IntoElement {
+    fn render_sidebar(&self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
+        let search_focused = self
+            .sidebar_search
+            .read(cx)
+            .focus_handle(cx)
+            .is_focused(window);
         let search_query = self
             .sidebar_search
             .read(cx)
@@ -393,9 +401,20 @@ impl RootView {
                                     ),
                             )
                             .child(
-                                Input::new(&self.sidebar_search)
-                                    .prefix(Icon::new(IconName::Search))
-                                    .w_full(),
+                                div()
+                                    .rounded(px(8.))
+                                    .border_1()
+                                    .border_color(if search_focused {
+                                        self.theme.accent
+                                    } else {
+                                        self.theme.border
+                                    })
+                                    .child(
+                                        Input::new(&self.sidebar_search)
+                                            .prefix(Icon::new(IconName::Search))
+                                            .bordered(false)
+                                            .w_full(),
+                                    ),
                             )
                         }),
                 ),
@@ -560,7 +579,7 @@ impl Render for RootView {
                     .flex()
                     .size_full()
                     .overflow_hidden()
-                    .child(self.render_sidebar(cx))
+                    .child(self.render_sidebar(window, cx))
                     .child(
                         v_flex()
                             .size_full()

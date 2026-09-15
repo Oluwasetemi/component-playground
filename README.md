@@ -54,7 +54,7 @@ just release 0.1.0
 ```
 
 The tag workflow validates the Cargo version, builds locked macOS ARM64,
-macOS Intel, Linux x86_64, and Windows x86_64 binaries, publishes archives and
-SHA-256 checksums, and creates the GitHub Release. Signing, installer/DMG
-packaging, and additional CPU architectures can be added when the application
-is ready for wider distribution.
+macOS Intel, Linux x86_64, and Windows x86_64 downloads with the bundled app
+icon, publishes archives and SHA-256 checksums, and creates the GitHub Release.
+Signing, installer/DMG packaging, and additional CPU architectures can be added
+when the application is ready for wider distribution.

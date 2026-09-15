@@ -13,3 +13,8 @@ gpui_platform.workspace = true
 component-playground-ui.workspace = true
 gpui-component.workspace = true
 gpui-component-assets.workspace = true
+image.workspace = true
+
+[target.'cfg(windows)'.build-dependencies]
+embed-resource.workspace = true
+image.workspace = true

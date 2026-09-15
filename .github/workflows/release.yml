@@ -123,8 +123,67 @@ jobs:
           set -euo pipefail
           package_dir="dist/package/component-playground-${GITHUB_REF_NAME}"
           mkdir -p "$package_dir"
-          cp "target/${{ matrix.target }}/release/${{ matrix.binary }}" "$package_dir/"
-          cp README.md CHANGELOG.md "$package_dir/"
+          cp README.md CHANGELOG.md crates/desktop/assets/app-icon.png "$package_dir/"
+
+          if [[ "${{ runner.os }}" == "macOS" ]]; then
+            app_dir="$package_dir/Component Playground.app"
+            mkdir -p "$app_dir/Contents/MacOS" "$app_dir/Contents/Resources"
+            cp "target/${{ matrix.target }}/release/${{ matrix.binary }}" "$app_dir/Contents/MacOS/Component Playground"
+            chmod +x "$app_dir/Contents/MacOS/Component Playground"
+
+            iconset="$RUNNER_TEMP/AppIcon.iconset"
+            mkdir -p "$iconset"
+            for size in 16 32 128 256 512; do
+              sips -z "$size" "$size" crates/desktop/assets/app-icon.png --out "$iconset/icon_${size}x${size}.png" >/dev/null
+              double=$((size * 2))
+              sips -z "$double" "$double" crates/desktop/assets/app-icon.png --out "$iconset/icon_${size}x${size}@2x.png" >/dev/null
+            done
+            iconutil -c icns "$iconset" -o "$app_dir/Contents/Resources/AppIcon.icns"
+
+            cat > "$app_dir/Contents/Info.plist" <<PLIST
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>CFBundleExecutable</key>
+            <string>Component Playground</string>
+            <key>CFBundleIconFile</key>
+            <string>AppIcon</string>
+            <key>CFBundleIdentifier</key>
+            <string>com.component-playground.app</string>
+            <key>CFBundleName</key>
+            <string>Component Playground</string>
+            <key>CFBundleDisplayName</key>
+            <string>Component Playground</string>
+            <key>CFBundlePackageType</key>
+            <string>APPL</string>
+            <key>CFBundleShortVersionString</key>
+            <string>${GITHUB_REF_NAME}</string>
+            <key>CFBundleVersion</key>
+            <string>${GITHUB_RUN_NUMBER}</string>
+            <key>LSMinimumSystemVersion</key>
+            <string>11.0</string>
+            <key>NSHighResolutionCapable</key>
+            <true/>
+          </dict>
+          </plist>
+          PLIST
+          else
+            cp "target/${{ matrix.target }}/release/${{ matrix.binary }}" "$package_dir/"
+
+            if [[ "${{ runner.os }}" == "Linux" ]]; then
+              mkdir -p "$package_dir/share/applications" "$package_dir/share/icons/hicolor/1024x1024/apps"
+              cp crates/desktop/assets/app-icon.png "$package_dir/share/icons/hicolor/1024x1024/apps/com.component-playground.app.png"
+              cat > "$package_dir/share/applications/com.component-playground.app.desktop" <<'DESKTOP'
+          [Desktop Entry]
+          Type=Application
+          Name=Component Playground
+          Exec=component-playground-desktop
+          Icon=com.component-playground.app
+          Categories=Development;
+          DESKTOP
+            fi
+          fi
 
       - name: Package Unix release archive
         if: runner.os != 'Windows'

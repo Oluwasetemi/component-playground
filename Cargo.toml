@@ -25,4 +25,6 @@ gpui-component = { git = "https://github.com/longbridge/gpui-kit" }
 # Optional, for default bundled assets
 gpui-component-assets = { package = "gpui-kit-assets", git = "https://github.com/longbridge/gpui-kit" }
 anyhow = "1.0"
+embed-resource = "3.0"
+image = "0.25"
 component-playground-ui = { path = "crates/ui" }

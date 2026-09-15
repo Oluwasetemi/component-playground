@@ -6,7 +6,7 @@ use gpui::{
 use gpui_component::Root;
 use gpui_component_assets::Assets;
 use gpui_platform::application;
-use std::borrow::Cow;
+use std::{borrow::Cow, sync::Arc};
 
 actions!(component, [About, Quit]);
 
@@ -35,6 +35,14 @@ impl AssetSource for AppAssets {
         );
         Ok(assets)
     }
+}
+
+fn window_icon() -> Arc<image::RgbaImage> {
+    Arc::new(
+        image::load_from_memory(include_bytes!("../assets/app-icon.png"))
+            .expect("failed to load application icon")
+            .into_rgba8(),
+    )
 }
 
 fn main() {
@@ -84,6 +92,7 @@ fn open_main_window(cx: &mut App) {
             window_min_size: Some(size(px(640.), px(420.))),
             window_background: WindowBackgroundAppearance::Blurred,
             app_id: Some("com.component-playground.app".into()),
+            icon: Some(window_icon()),
             titlebar: Some(TitlebarOptions {
                 title: Some("Component Playground".into()),
                 appears_transparent: true,

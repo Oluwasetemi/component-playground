@@ -20,13 +20,13 @@ cp "$binary" "$app_dir/Contents/MacOS/Component Playground"
 chmod +x "$app_dir/Contents/MacOS/Component Playground"
 
 for size in 16 32 128 256 512; do
-  inner=$((size * 78 / 100))
+  inner=$((size * 70 / 100))
   tmp="$iconset/icon_${size}x${size}.inner.png"
   sips -z "$inner" "$inner" "$icon_png" --out "$tmp" >/dev/null
   scripts/pad-png.py "$tmp" "$iconset/icon_${size}x${size}.png" "$size" "$size"
 
   double=$((size * 2))
-  inner_double=$((double * 78 / 100))
+  inner_double=$((double * 70 / 100))
   tmp_double="$iconset/icon_${size}x${size}@2x.inner.png"
   sips -z "$inner_double" "$inner_double" "$icon_png" --out "$tmp_double" >/dev/null
   scripts/pad-png.py "$tmp_double" "$iconset/icon_${size}x${size}@2x.png" "$double" "$double"

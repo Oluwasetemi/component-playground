@@ -105,6 +105,17 @@ def chunk(kind, payload):
     )
 
 
+def rounded_rect_alpha(x, y, width, height, radius):
+    corner_x = radius if x < radius else width - radius if x > width - radius else x
+    corner_y = radius if y < radius else height - radius if y > height - radius else y
+    distance = ((x - corner_x) ** 2 + (y - corner_y) ** 2) ** 0.5
+    if distance <= radius - 1:
+        return 1.0
+    if distance >= radius:
+        return 0.0
+    return radius - distance
+
+
 def write_png(path, width, height, rgba):
     scanlines = bytearray()
     stride = width * 4
@@ -130,11 +141,15 @@ def main():
     canvas = bytearray(args.width * args.height * 4)
     left = (args.width - src_w) // 2
     top = (args.height - src_h) // 2
+    radius = min(src_w, src_h) * 0.22
 
     for y in range(src_h):
-        dst_start = ((top + y) * args.width + left) * 4
-        src_start = y * src_w * 4
-        canvas[dst_start : dst_start + src_w * 4] = src[src_start : src_start + src_w * 4]
+        for x in range(src_w):
+            src_index = (y * src_w + x) * 4
+            dst_index = ((top + y) * args.width + left + x) * 4
+            alpha_scale = rounded_rect_alpha(x + 0.5, y + 0.5, src_w, src_h, radius)
+            canvas[dst_index : dst_index + 3] = src[src_index : src_index + 3]
+            canvas[dst_index + 3] = round(src[src_index + 3] * alpha_scale)
 
     write_png(args.output, args.width, args.height, canvas)
 

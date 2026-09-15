@@ -195,6 +195,22 @@ jobs:
           hash="$(shasum -a 256 "dist/${{ matrix.archive }}" | awk '{print $1}')"
           echo "$hash  ${{ matrix.archive }}" > "dist/${{ matrix.archive }}.sha256"
 
+      - name: Package macOS DMG
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          set -euo pipefail
+          dmg="${{ matrix.archive }}"
+          dmg="${dmg%.tar.gz}.dmg"
+          hdiutil create \
+            -volname "Component Playground" \
+            -srcfolder "dist/package/component-playground-${GITHUB_REF_NAME}" \
+            -ov \
+            -format UDZO \
+            "dist/$dmg"
+          hash="$(shasum -a 256 "dist/$dmg" | awk '{print $1}')"
+          echo "$hash  $dmg" > "dist/$dmg.sha256"
+
       - name: Package Windows release archive
         if: runner.os == 'Windows'
         shell: pwsh
@@ -209,6 +225,7 @@ jobs:
           name: release-${{ matrix.target }}
           path: |
             dist/*.tar.gz
+            dist/*.dmg
             dist/*.zip
             dist/*.sha256
           if-no-files-found: error
@@ -230,7 +247,7 @@ jobs:
 
       - name: Create combined checksums
         working-directory: dist
-        run: sha256sum *.tar.gz *.zip > SHA256SUMS
+        run: sha256sum *.tar.gz *.dmg *.zip > SHA256SUMS
 
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2

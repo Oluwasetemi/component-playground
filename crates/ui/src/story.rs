@@ -30,33 +30,57 @@ impl StoryGroup {
             Self::Infrastructure => "Infrastructure",
         }
     }
+
+    pub const fn icon(self) -> IconName {
+        match self {
+            Self::BasicControls => IconName::LayoutDashboard,
+            Self::FormsAndInputs => IconName::File,
+            Self::OverlaysAndMenus => IconName::Menu,
+            Self::DataAndLayout => IconName::PanelLeft,
+            Self::ContentAndVisualization => IconName::ChartPie,
+            Self::Infrastructure => IconName::Settings2,
+        }
+    }
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum StoryId {
     Accordion,
     Alert,
+    Attachment,
     AvatarAndAvatarGroup,
     Badge,
     Breadcrumb,
+    Bubble,
     Button,
+    Carousel,
     Checkbox,
     Collapsible,
+    DropdownButton,
+    Empty,
+    FocusTrap,
     GroupBox,
+    Image,
     Kbd,
     Label,
     Link,
+    Marker,
+    Message,
+    MessageScroller,
     Progress,
     Radio,
     Rating,
     Separator,
     Skeleton,
+    Shimmer,
     Spinner,
     StatusBar,
     Stepper,
     Switch,
     Tag,
     TabsAndTabBar,
+    Toggle,
+    Editor,
     Input,
     Textarea,
     OtpInput,
@@ -80,15 +104,19 @@ pub enum StoryId {
     Menu,
     DropdownMenu,
     ContextMenu,
+    Command,
     NativeMenu,
     List,
     SearchableList,
+    Scrollable,
     Table,
     DataTable,
+    DescriptionList,
     Tree,
     VirtualList,
     Scrollbar,
     ResizablePanels,
+    Resizable,
     Sidebar,
     DockLayout,
     Icon,
@@ -114,30 +142,43 @@ pub enum StoryId {
 }
 
 impl StoryId {
-    pub const ALL: [Self; 77] = [
+    pub const ALL: [Self; 94] = [
         Self::Accordion,
         Self::Alert,
+        Self::Attachment,
         Self::AvatarAndAvatarGroup,
         Self::Badge,
         Self::Breadcrumb,
+        Self::Bubble,
         Self::Button,
+        Self::Carousel,
         Self::Checkbox,
         Self::Collapsible,
+        Self::DropdownButton,
+        Self::Empty,
+        Self::FocusTrap,
         Self::GroupBox,
+        Self::Image,
         Self::Kbd,
         Self::Label,
         Self::Link,
+        Self::Marker,
+        Self::Message,
+        Self::MessageScroller,
         Self::Progress,
         Self::Radio,
         Self::Rating,
         Self::Separator,
         Self::Skeleton,
+        Self::Shimmer,
         Self::Spinner,
         Self::StatusBar,
         Self::Stepper,
         Self::Switch,
         Self::Tag,
         Self::TabsAndTabBar,
+        Self::Toggle,
+        Self::Editor,
         Self::Input,
         Self::Textarea,
         Self::OtpInput,
@@ -161,15 +202,19 @@ impl StoryId {
         Self::Menu,
         Self::DropdownMenu,
         Self::ContextMenu,
+        Self::Command,
         Self::NativeMenu,
         Self::List,
         Self::SearchableList,
+        Self::Scrollable,
         Self::Table,
         Self::DataTable,
+        Self::DescriptionList,
         Self::Tree,
         Self::VirtualList,
         Self::Scrollbar,
         Self::ResizablePanels,
+        Self::Resizable,
         Self::Sidebar,
         Self::DockLayout,
         Self::Icon,
@@ -198,27 +243,40 @@ impl StoryId {
         match self {
             Self::Accordion => "Accordion",
             Self::Alert => "Alert",
+            Self::Attachment => "Attachment",
             Self::AvatarAndAvatarGroup => "Avatar and Avatar Group",
             Self::Badge => "Badge",
             Self::Breadcrumb => "Breadcrumb",
+            Self::Bubble => "Bubble",
             Self::Button => "Button and Button Group",
+            Self::Carousel => "Carousel",
             Self::Checkbox => "Checkbox",
             Self::Collapsible => "Collapsible",
+            Self::DropdownButton => "Dropdown Button",
+            Self::Empty => "Empty",
+            Self::FocusTrap => "Focus Trap",
             Self::GroupBox => "Group Box",
+            Self::Image => "Image",
             Self::Kbd => "Kbd",
             Self::Label => "Label",
             Self::Link => "Link",
+            Self::Marker => "Marker",
+            Self::Message => "Message",
+            Self::MessageScroller => "Message Scroller",
             Self::Progress => "Progress",
             Self::Radio => "Radio",
             Self::Rating => "Rating",
             Self::Separator => "Separator",
             Self::Skeleton => "Skeleton",
+            Self::Shimmer => "Shimmer",
             Self::Spinner => "Spinner",
             Self::StatusBar => "Status Bar",
             Self::Stepper => "Stepper",
             Self::Switch => "Switch",
             Self::Tag => "Tag",
             Self::TabsAndTabBar => "Tabs and Tab Bar",
+            Self::Toggle => "Toggle",
+            Self::Editor => "Editor",
             Self::Input => "Input",
             Self::Textarea => "Textarea",
             Self::OtpInput => "OTP Input",
@@ -242,15 +300,19 @@ impl StoryId {
             Self::Menu => "Menu",
             Self::DropdownMenu => "Dropdown Menu",
             Self::ContextMenu => "Context Menu",
+            Self::Command => "Command",
             Self::NativeMenu => "Native Menu",
             Self::List => "List",
             Self::SearchableList => "Searchable List",
+            Self::Scrollable => "Scrollable",
             Self::Table => "Table",
             Self::DataTable => "Data Table",
+            Self::DescriptionList => "Description List",
             Self::Tree => "Tree",
             Self::VirtualList => "Virtual List",
             Self::Scrollbar => "Scrollbar",
             Self::ResizablePanels => "Resizable Panels",
+            Self::Resizable => "Resizable",
             Self::Sidebar => "Sidebar",
             Self::DockLayout => "Dock Layout",
             Self::Icon => "Icon",
@@ -280,28 +342,41 @@ impl StoryId {
         match self {
             Self::Accordion
             | Self::Alert
+            | Self::Attachment
             | Self::AvatarAndAvatarGroup
             | Self::Badge
             | Self::Breadcrumb
+            | Self::Bubble
             | Self::Button
+            | Self::Carousel
             | Self::Checkbox
             | Self::Collapsible
+            | Self::DropdownButton
+            | Self::Empty
+            | Self::FocusTrap
             | Self::GroupBox
+            | Self::Image
             | Self::Kbd
             | Self::Label
             | Self::Link
+            | Self::Marker
+            | Self::Message
+            | Self::MessageScroller
             | Self::Progress
             | Self::Radio
             | Self::Rating
             | Self::Separator
             | Self::Skeleton
+            | Self::Shimmer
             | Self::Spinner
             | Self::StatusBar
             | Self::Stepper
             | Self::Switch
             | Self::Tag
-            | Self::TabsAndTabBar => StoryGroup::BasicControls,
-            Self::Input
+            | Self::TabsAndTabBar
+            | Self::Toggle => StoryGroup::BasicControls,
+            Self::Editor
+            | Self::Input
             | Self::Textarea
             | Self::OtpInput
             | Self::NumberInput
@@ -324,17 +399,21 @@ impl StoryId {
             | Self::Menu
             | Self::DropdownMenu
             | Self::ContextMenu
+            | Self::Command
             | Self::NativeMenu => StoryGroup::OverlaysAndMenus,
             Self::List
             | Self::SearchableList
+            | Self::Scrollable
             | Self::Table
             | Self::DataTable
+            | Self::DescriptionList
             | Self::Tree
             | Self::VirtualList
             | Self::Scrollbar
             | Self::ResizablePanels
             | Self::Sidebar
-            | Self::DockLayout => StoryGroup::DataAndLayout,
+            | Self::DockLayout
+            | Self::Resizable => StoryGroup::DataAndLayout,
             Self::Icon
             | Self::TextView
             | Self::Markdown
@@ -362,22 +441,33 @@ impl StoryId {
         match self {
             Self::Accordion | Self::Collapsible => IconName::ChevronDown,
             Self::Alert | Self::AlertDialog | Self::Label | Self::TextView => IconName::Info,
+            Self::Attachment | Self::Empty | Self::Image | Self::DescriptionList => IconName::File,
             Self::AvatarAndAvatarGroup => IconName::CircleUser,
             Self::Badge | Self::Rating | Self::Tag => IconName::Star,
             Self::Breadcrumb => IconName::ChevronRight,
+            Self::Bubble | Self::Message => IconName::Info,
             Self::Button => IconName::LayoutDashboard,
+            Self::Carousel => IconName::LayoutDashboard,
             Self::Checkbox => IconName::Check,
+            Self::DropdownButton | Self::Command => IconName::Menu,
+            Self::FocusTrap => IconName::Frame,
             Self::GroupBox | Self::WindowBorder => IconName::Frame,
+            Self::Editor => IconName::SquareTerminal,
             Self::Kbd | Self::SyntaxHighlighter => IconName::SquareTerminal,
             Self::Link => IconName::ExternalLink,
+            Self::Marker => IconName::Minus,
+            Self::MessageScroller => IconName::Menu,
             Self::Progress => IconName::LoaderCircle,
             Self::Radio => IconName::CircleCheck,
             Self::Separator => IconName::Minus,
-            Self::Skeleton | Self::Spinner | Self::AnimationAndTransitions => IconName::Loader,
+            Self::Skeleton | Self::Spinner | Self::Shimmer | Self::AnimationAndTransitions => {
+                IconName::Loader
+            }
             Self::StatusBar | Self::PieChart => IconName::ChartPie,
             Self::Stepper | Self::Pagination => IconName::ArrowRight,
             Self::Switch | Self::Slider | Self::Settings => IconName::Settings2,
             Self::TabsAndTabBar | Self::Sidebar => IconName::PanelLeft,
+            Self::Toggle => IconName::Settings2,
             Self::Input | Self::SearchableList | Self::Combobox => IconName::Search,
             Self::Textarea | Self::Markdown | Self::Table | Self::DataTable => IconName::File,
             Self::OtpInput => IconName::Asterisk,
@@ -391,10 +481,10 @@ impl StoryId {
             Self::Notification => IconName::Bell,
             Self::Menu | Self::DropdownMenu | Self::NativeMenu => IconName::Menu,
             Self::ContextMenu => IconName::Ellipsis,
-            Self::List | Self::VirtualList => IconName::Menu,
+            Self::List | Self::Scrollable | Self::VirtualList => IconName::Menu,
             Self::Tree => IconName::FolderOpen,
             Self::Scrollbar => IconName::PanelRight,
-            Self::ResizablePanels => IconName::ResizeCorner,
+            Self::ResizablePanels | Self::Resizable => IconName::ResizeCorner,
             Self::DockLayout | Self::ComponentRoot => IconName::LayoutDashboard,
             Self::Icon => IconName::Asterisk,
             Self::HtmlRendering => IconName::Globe,

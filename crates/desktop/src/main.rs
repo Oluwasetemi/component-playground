@@ -1,12 +1,13 @@
-use component_playground_ui::RootView;
+use component_playground_ui::{open_about_dialog, RootView};
 use gpui::{
     actions, prelude::*, px, size, App, Bounds, KeyBinding, Menu, MenuItem, QuitMode,
     TitlebarOptions, WindowBackgroundAppearance, WindowBounds, WindowOptions,
 };
+use gpui_component::Root;
 use gpui_component_assets::Assets;
 use gpui_platform::application;
 
-actions!(component, [Quit]);
+actions!(component, [About, Quit]);
 
 fn main() {
     let app = application().with_assets(Assets);
@@ -15,12 +16,31 @@ fn main() {
         .run(|cx: &mut App| {
             gpui_component::init(cx);
             cx.on_action(|_: &Quit, cx| cx.quit());
+            cx.on_action(|_: &About, cx| {
+                if let Some(window) = cx
+                    .active_window()
+                    .and_then(|window| window.downcast::<Root>())
+                {
+                    cx.defer(move |cx| {
+                        window
+                            .update(cx, |_, window, cx| {
+                                window.defer(cx, |window, cx| {
+                                    open_about_dialog(window, cx);
+                                });
+                            })
+                            .expect("failed to open the About dialog");
+                    });
+                }
+            });
             cx.bind_keys([
                 KeyBinding::new("cmd-q", Quit, None),
                 KeyBinding::new("ctrl-q", Quit, None),
             ]);
-            cx.set_menus([Menu::new("Component Playground")
-                .items([MenuItem::action("Quit Component Playground", Quit)])]);
+            cx.set_menus([Menu::new("Component Playground").items([
+                MenuItem::action("About Component Playground", About),
+                MenuItem::separator(),
+                MenuItem::action("Quit Component Playground", Quit),
+            ])]);
 
             open_main_window(cx);
             cx.activate(true);

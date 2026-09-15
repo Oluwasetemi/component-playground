@@ -2,7 +2,7 @@ use crate::StorySection;
 use gpui::{div, prelude::*, px, Context, IntoElement, Render, Window};
 use gpui_component::{
     form::{field, v_form},
-    input::{Input, InputState},
+    input::{Input, InputState, Textarea, TextareaState},
     scroll::ScrollableElement as _,
     v_flex,
 };
@@ -10,7 +10,7 @@ use gpui_component::{
 pub struct FormStory {
     name: gpui::Entity<InputState>,
     email: gpui::Entity<InputState>,
-    bio: gpui::Entity<InputState>,
+    bio: gpui::Entity<TextareaState>,
 }
 
 impl FormStory {
@@ -19,8 +19,7 @@ impl FormStory {
             name: cx.new(|cx| InputState::new(window, cx).placeholder("Your name")),
             email: cx.new(|cx| InputState::new(window, cx).placeholder("you@example.com")),
             bio: cx.new(|cx| {
-                InputState::new(window, cx)
-                    .multi_line(true)
+                TextareaState::new(window, cx)
                     .auto_grow(3, 6)
                     .placeholder("Tell us about yourself")
             }),
@@ -56,7 +55,7 @@ impl Render for FormStory {
                         field()
                             .label("Bio")
                             .description("A short description helps personalize your profile.")
-                            .child(Input::new(&self.bio)),
+                            .child(Textarea::new(&self.bio)),
                     ),
             ))
     }

@@ -29,8 +29,16 @@ impl Render for LinkStory {
                 "Links",
                 h_flex()
                     .gap_4()
-                    .child(Link::new("link-docs").child("Documentation"))
-                    .child(Link::new("link-source").child("Source code"))
+                    .child(
+                        Link::new("link-docs")
+                            .href("https://gpui-kit.com")
+                            .child("Documentation"),
+                    )
+                    .child(
+                        Link::new("link-source")
+                            .href("https://github.com/longbridge/gpui-kit")
+                            .child("Source code"),
+                    )
                     .child(Link::new("link-disabled").disabled(true).child("Disabled")),
             ))
             .child(StorySection::new(

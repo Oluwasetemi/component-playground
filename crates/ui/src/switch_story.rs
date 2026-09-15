@@ -9,6 +9,7 @@ pub struct SwitchStory {
     marketing: bool,
     security: bool,
     success: bool,
+    danger: bool,
 }
 
 impl SwitchStory {
@@ -17,6 +18,7 @@ impl SwitchStory {
             marketing: true,
             security: false,
             success: true,
+            danger: true,
         }
     }
 }
@@ -95,8 +97,12 @@ impl Render for SwitchStory {
                     .child(
                         Switch::new("switch-danger")
                             .label("Destructive")
-                            .checked(true)
-                            .color(cx.theme().red),
+                            .checked(self.danger)
+                            .color(cx.theme().red)
+                            .on_click(cx.listener(|this, checked, _, cx| {
+                                this.danger = *checked;
+                                cx.notify();
+                            })),
                     )
                     .child(
                         Switch::new("switch-disabled")

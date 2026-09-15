@@ -20,10 +20,18 @@ cp "$binary" "$app_dir/Contents/MacOS/Component Playground"
 chmod +x "$app_dir/Contents/MacOS/Component Playground"
 
 for size in 16 32 128 256 512; do
-  sips -z "$size" "$size" "$icon_png" --out "$iconset/icon_${size}x${size}.png" >/dev/null
+  inner=$((size * 78 / 100))
+  tmp="$iconset/icon_${size}x${size}.inner.png"
+  sips -z "$inner" "$inner" "$icon_png" --out "$tmp" >/dev/null
+  scripts/pad-png.py "$tmp" "$iconset/icon_${size}x${size}.png" "$size" "$size"
+
   double=$((size * 2))
-  sips -z "$double" "$double" "$icon_png" --out "$iconset/icon_${size}x${size}@2x.png" >/dev/null
+  inner_double=$((double * 78 / 100))
+  tmp_double="$iconset/icon_${size}x${size}@2x.inner.png"
+  sips -z "$inner_double" "$inner_double" "$icon_png" --out "$tmp_double" >/dev/null
+  scripts/pad-png.py "$tmp_double" "$iconset/icon_${size}x${size}@2x.png" "$double" "$double"
 done
+rm -f "$iconset"/*.inner.png
 iconutil -c icns "$iconset" -o "$app_dir/Contents/Resources/AppIcon.icns"
 
 cat > "$app_dir/Contents/Info.plist" <<PLIST

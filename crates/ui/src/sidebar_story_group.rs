@@ -1,4 +1,4 @@
-use gpui::{prelude::*, App, ClickEvent, ElementId, IntoElement, SharedString, Window};
+use gpui::{div, prelude::*, px, App, ClickEvent, ElementId, IntoElement, SharedString, Window};
 use gpui_component::{
     sidebar::{SidebarItem, SidebarMenuItem},
     v_flex, ActiveTheme as _, Collapsible, Icon, IconName,
@@ -12,6 +12,7 @@ pub struct SidebarStoryGroup {
     label: SharedString,
     icon: IconName,
     children: Vec<SidebarMenuItem>,
+    description: Option<SharedString>,
     collapsed: bool,
     open: bool,
     on_toggle: ToggleHandler,
@@ -27,6 +28,23 @@ impl SidebarStoryGroup {
             label: label.into(),
             icon,
             children: children.into_iter().collect(),
+            description: None,
+            collapsed: false,
+            open: false,
+            on_toggle: Rc::new(|_, _, _| {}),
+        }
+    }
+
+    pub fn empty_state(
+        label: impl Into<SharedString>,
+        description: impl Into<SharedString>,
+        icon: IconName,
+    ) -> Self {
+        Self {
+            label: label.into(),
+            icon,
+            children: Vec::new(),
+            description: Some(description.into()),
             collapsed: false,
             open: false,
             on_toggle: Rc::new(|_, _, _| {}),
@@ -71,7 +89,22 @@ impl SidebarItem for SidebarStoryGroup {
         let icon = self.icon;
         let collapsed = self.collapsed;
         let children = self.children;
+        let description = self.description;
         let on_toggle = self.on_toggle;
+
+        if let Some(description) = description {
+            return v_flex()
+                .items_center()
+                .gap_2()
+                .px_3()
+                .py_6()
+                .text_center()
+                .text_color(cx.theme().muted_foreground)
+                .child(Icon::new(icon).size_5())
+                .child(div().text_color(cx.theme().foreground).child(label))
+                .child(div().text_size(px(12.)).child(description))
+                .into_any_element();
+        }
 
         v_flex()
             .child(
@@ -106,5 +139,6 @@ impl SidebarItem for SidebarStoryGroup {
                         })),
                 )
             })
+            .into_any_element()
     }
 }

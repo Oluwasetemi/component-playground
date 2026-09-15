@@ -420,6 +420,8 @@ impl RootView {
                 ),
             );
 
+        let mut has_search_matches = false;
+
         for (group_index, group) in StoryGroup::ALL.into_iter().enumerate() {
             let group_matches = group.label().to_ascii_lowercase().contains(&search_query);
             let matching_stories: Vec<_> = StoryId::ALL
@@ -434,6 +436,7 @@ impl RootView {
             if searching && matching_stories.is_empty() {
                 continue;
             }
+            has_search_matches = true;
             let items = matching_stories.into_iter().map(menu_item);
             sidebar = sidebar.child(
                 SidebarStoryGroup::new(group.label(), group.icon(), items)
@@ -446,6 +449,14 @@ impl RootView {
                         cx.notify();
                     })),
             );
+        }
+
+        if searching && !has_search_matches && !self.sidebar_collapsed {
+            sidebar = sidebar.child(SidebarStoryGroup::empty_state(
+                "No components found",
+                "Try a different search term.",
+                IconName::Search,
+            ));
         }
 
         sidebar.footer(

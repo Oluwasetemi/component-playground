@@ -118,7 +118,7 @@ pub use button::{Button, ButtonVariant, BUTTON_VARIANTS};
 pub use hello_world::HelloWorld;
 pub use theme::Theme;
 
-use gpui::{div, prelude::*, px, Context, IntoElement, MouseButton, MouseDownEvent, Window};
+use gpui::{div, img, prelude::*, px, Context, IntoElement, MouseButton, MouseDownEvent, Window};
 use gpui_component::{
     h_flex,
     sidebar::{
@@ -384,7 +384,7 @@ impl RootView {
                             this.child(
                                 h_flex()
                                     .gap_2()
-                                    .child(Icon::new(IconName::GalleryVerticalEnd))
+                                    .child(img("app-icon.png").size(px(24.)).rounded(px(6.)))
                                     .child(
                                         v_flex()
                                             .gap_0()

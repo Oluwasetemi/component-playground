@@ -446,14 +446,8 @@ impl AdditionalStory {
                     Self::panel(
                         h_flex()
                             .gap_4()
-                            .child(image(
-                                "https://images.unsplash.com/photo-1518770660439-4636190af475?w=640",
-                                ObjectFit::Cover,
-                            ))
-                            .child(image(
-                                "https://images.unsplash.com/photo-1518770660439-4636190af475?w=640",
-                                ObjectFit::Contain,
-                            )),
+                            .child(image("app-icon-source.png", ObjectFit::Cover))
+                            .child(image("app-icon.png", ObjectFit::Contain)),
                     ),
                 ))
                 .child(StorySection::new(

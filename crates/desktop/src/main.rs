@@ -1,16 +1,44 @@
 use component_playground_ui::{open_about_dialog, RootView};
 use gpui::{
-    actions, prelude::*, px, size, App, Bounds, KeyBinding, Menu, MenuItem, QuitMode,
-    TitlebarOptions, WindowBackgroundAppearance, WindowBounds, WindowOptions,
+    actions, prelude::*, px, size, App, AssetSource, Bounds, KeyBinding, Menu, MenuItem, QuitMode,
+    Result, SharedString, TitlebarOptions, WindowBackgroundAppearance, WindowBounds, WindowOptions,
 };
 use gpui_component::Root;
 use gpui_component_assets::Assets;
 use gpui_platform::application;
+use std::borrow::Cow;
 
 actions!(component, [About, Quit]);
 
+struct AppAssets;
+
+impl AssetSource for AppAssets {
+    fn load(&self, path: &str) -> Result<Option<Cow<'static, [u8]>>> {
+        match path {
+            "app-icon.png" => Ok(Some(Cow::Borrowed(include_bytes!(
+                "../assets/app-icon.png"
+            )))),
+            "app-icon-source.png" => Ok(Some(Cow::Borrowed(include_bytes!(
+                "../assets/app-icon-source.png"
+            )))),
+            _ => Assets.load(path),
+        }
+    }
+
+    fn list(&self, path: &str) -> Result<Vec<SharedString>> {
+        let mut assets = Assets.list(path)?;
+        assets.extend(
+            ["app-icon.png", "app-icon-source.png"]
+                .into_iter()
+                .filter(|asset| asset.starts_with(path))
+                .map(SharedString::from),
+        );
+        Ok(assets)
+    }
+}
+
 fn main() {
-    let app = application().with_assets(Assets);
+    let app = application().with_assets(AppAssets);
 
     app.with_quit_mode(QuitMode::LastWindowClosed)
         .run(|cx: &mut App| {

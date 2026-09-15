@@ -56,21 +56,52 @@ jobs:
   build:
     name: Build ${{ matrix.name }}
     needs: verify
-    runs-on: macos-14
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         include:
           - name: macOS ARM64
+            os: macos-14
             target: aarch64-apple-darwin
-            architecture: arm64
+            binary: component-playground-desktop
+            archive: component-playground-${{ github.ref_name }}-macos-arm64.tar.gz
           - name: macOS Intel
+            os: macos-14
             target: x86_64-apple-darwin
-            architecture: x86_64
+            binary: component-playground-desktop
+            archive: component-playground-${{ github.ref_name }}-macos-x86_64.tar.gz
+          - name: Linux x86_64
+            os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            binary: component-playground-desktop
+            archive: component-playground-${{ github.ref_name }}-linux-x86_64.tar.gz
+          - name: Windows x86_64
+            os: windows-latest
+            target: x86_64-pc-windows-msvc
+            binary: component-playground-desktop.exe
+            archive: component-playground-${{ github.ref_name }}-windows-x86_64.zip
 
     steps:
       - name: Check out source
         uses: actions/checkout@v4
+
+      - name: Install Linux system dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            cmake \
+            libasound2-dev \
+            libfontconfig1-dev \
+            libwayland-dev \
+            libx11-dev \
+            libxcb-render0-dev \
+            libxcb-shape0-dev \
+            libxcb-xfixes0-dev \
+            libxcb1-dev \
+            libxkbcommon-dev \
+            pkg-config
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
@@ -86,21 +117,41 @@ jobs:
       - name: Build release binary
         run: cargo build --locked --release --target ${{ matrix.target }} -p component-playground-desktop
 
-      - name: Package release archive
+      - name: Stage release files
         shell: bash
         run: |
-          archive="component-playground-${GITHUB_REF_NAME}-${{ matrix.architecture }}.tar.gz"
+          set -euo pipefail
+          package_dir="dist/package/component-playground-${GITHUB_REF_NAME}"
+          mkdir -p "$package_dir"
+          cp "target/${{ matrix.target }}/release/${{ matrix.binary }}" "$package_dir/"
+          cp README.md CHANGELOG.md "$package_dir/"
+
+      - name: Package Unix release archive
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          set -euo pipefail
           mkdir -p dist
-          tar -czf "dist/$archive" \
-            -C "target/${{ matrix.target }}/release" \
-            component-playground-desktop
-          shasum -a 256 "dist/$archive" > "dist/$archive.sha256"
+          tar -czf "dist/${{ matrix.archive }}" -C dist/package "component-playground-${GITHUB_REF_NAME}"
+          hash="$(shasum -a 256 "dist/${{ matrix.archive }}" | awk '{print $1}')"
+          echo "$hash  ${{ matrix.archive }}" > "dist/${{ matrix.archive }}.sha256"
+
+      - name: Package Windows release archive
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          Compress-Archive -Path "dist/package/component-playground-${env:GITHUB_REF_NAME}" -DestinationPath "dist/${{ matrix.archive }}"
+          $hash = Get-FileHash "dist/${{ matrix.archive }}" -Algorithm SHA256
+          "$($hash.Hash.ToLower())  ${{ matrix.archive }}" | Out-File -Encoding ascii "dist/${{ matrix.archive }}.sha256"
 
       - name: Upload release archive
         uses: actions/upload-artifact@v4
         with:
           name: release-${{ matrix.target }}
-          path: dist/*
+          path: |
+            dist/*.tar.gz
+            dist/*.zip
+            dist/*.sha256
           if-no-files-found: error
 
   publish:
@@ -120,7 +171,7 @@ jobs:
 
       - name: Create combined checksums
         working-directory: dist
-        run: sha256sum *.tar.gz > SHA256SUMS
+        run: sha256sum *.tar.gz *.zip > SHA256SUMS
 
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
